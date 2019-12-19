@@ -15,7 +15,7 @@ Smote_variants : c'est une technique de Sur-échantillonnage qui s'exerce que le
             Une Petite vue sur la démarche d'y exctuer la méthode smote_variants :
    
 Pour excuter cette smote_variants methods on a besoin de y acces dans le local qu'on dû installé et
-pour cela on utilise le module 'os.path' par la création d'une variable appelée chemain_caché :
+pour cela on utilise le module 'os.path' par la création d'une variable appelée chemin_caché :
 
             cache_path= os.path.join(os.path.expanduser('~'), 'smote_test')
 
