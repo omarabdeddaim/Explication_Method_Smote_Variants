@@ -1,0 +1,131 @@
+Explication simple de certain bibliothèque utilisé lors de ce code. 
+   Packages : 
+
+os : c'est une bibliothèque/module qui a pour but de faire utiliser les fonctions dépendantes du système 
+  d'exploitation dans le microprogramme (Terminal).
+                       Utiliser le path : c'est de router dans le système sans le moindre souci.
+
+Sklearn : c'est une bibiothèque/module qui fournit tous les algorithms necessaire pour faire 
+travailler l'apprentissage automatique ou informatique décisionnelle. aussi des données stockes pour 
+faire des testes. 
+
+Smote_variants : c'est une technique de Sur-échantillonnage qui s'exerce que les données non 
+équilibre basé sur theorème de Shannon. 
+           
+            Une Petite vue sur la démarche d'y exctuer la méthode smote_variants :
+   
+Pour excuter cette smote_variants methods on a besoin de y acces dans le local qu'on dû installé et
+pour cela on utilise le module 'os.path' par la création d'une variable appelée chemain_caché :
+
+            cache_path= os.path.join(os.path.expanduser('~'), 'smote_test')
+
+    Note1 :
+            1. On utilise expanduser(~) car dans windows ainsi que dans linux on remplace le caractère
+      ~ par le chemin directeur vers le C. 
+
+            2. On fait teste le système pour ne pas tomber dans la redondance pour y avoir créer 
+            un chemain au cas où il y aura trouvé l'existence du chemain par le condition suivante: 
+                           if not os.path.exists(cache_path):
+                             os.makedirs(cache_path) 
+
+            On excuse os.makedirs() on ajoute le chemin qu'on a trouver pour la méthode smote_variants
+
+Télecharger les doonnées (existent déjà du cancer des seins) pour appliquer la méthode smote_variants dessus: 
+
+      dataset= datasets.load_breast_cancer()
+
+            Explication des données : 
+1.mean radius 
+2.mean texture 
+3.mean perimeter 
+4.mean area
+5.mean smoothness
+6.mean compactness
+7.mean concavity
+8.mean concave points
+9.mean symmetry
+10.mean fractal dimension
+11.radius error
+12.texture error
+13.perimeter error
+14.area error
+15.smoothness error
+16.compactness error
+17.concavity error
+18.concave points error
+19.symmetry error
+20.fractal dimension error
+21.worst radius
+22.worst texture
+23.worst perimeter
+24.worst area
+25.worst smoothness
+26.worst compactness
+27.worst concavity
+28.worst concave points
+29.worst symmetry
+30.worst fractal dimension
+
+
+Pour en connaitre plus sur les données veuillez vous s'il vous plait voir la page ci-dessous : 
+           Source : https://www.docteurbrun.fr/chirurgie-esthetique-seins-operation-mammaire/augmentation-seins-petits-protheses-implants-mammaires-anatomiques
+
+En basant sur ces 30 paramètres on a pu apprendre une idée sur l'élèment qui porte le virus cancer ou non
+ et on expose le resultat sous le titre "target".
+
+Méthodes :
+
+on va utilise les méthode pour classifier des données qu'on va créer par 
+
+ knn_classifier= KNeighborsClassifier() # les K plus proches voisins c'est pour le sur-échontillonnage
+dt_classifier= DecisionTreeClassifier() # L'arbre de décisions classificateur
+
+On génére deux variable l'un c'est simple_objet et l'autre pour les classifier
+samp_obj = oversamplers
+cl_obj  = DecisionTreeClassifier
+On excute cette ligne  où a a fait une fréquence de sur-échantillonnage de 5.
+samp_obj, cl_obj= sv.model_selection(dataset= dataset,
+                                        samplers= sv.get_n_quickest_oversamplers(5),
+                                        classifiers= [knn_classifier, dt_classifier],
+                                        cache_path= cache_path,
+                                        n_jobs= 5,
+                                        max_samp_par_comb= 35)
+
+
+Output dans le Terminal: 
+
+"""
+2019-12-19 23:41:45,995:INFO:dataset: breast_cancer, samplings_available: True, evaluations_available: True
+2019-12-19 23:41:46,013:INFO:doing the folding
+2019-12-19 23:41:46,022:INFO:Folding reading from file folding_breast_cancer.pickle
+2019-12-19 23:41:46,074:INFO:do the samplings
+2019-12-19 23:41:46,075:INFO:create sampling objects
+2019-12-19 23:41:46,107:INFO:executing 72 sampling in parallel
+2019-12-19 23:41:52,192:INFO:do the evaluations
+2019-12-19 23:41:52,194:INFO:create classifier jobs
+2019-12-19 23:41:52,431:INFO:executing 72 evaluation jobs in parallel
+2019-12-19 23:41:53,465:INFO:concatenating the results
+2019-12-19 23:41:53,742:INFO:aggregating the results
+"""
+
+La comparaison des résultat de la méthode oversamplers  et classificatuer et les données trouvés 
+dans le fichier excel "Comparaison" ci-joint.
+
+Voir le modèle utilisé  on tape le code suivant : 
+
+cl_obj.fit(X_samp, y_samp)
+
+ et censsé d'avoir l'output suivant : 
+""""
+KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+                     metric_params=None, n_jobs=None, n_neighbors=5, p=2,
+                     weights='uniform')
+"""
+
+signifie que : 
+
+uniform weights: tous les points pour chque voisins ayant des poids égaux. 
+algorithm='auto':  Décider de l’algorithme le plus approprié en fonction des valeurs passées à la méthode fit.
+
+pour les autres signification je vous prie de voir le lien suivant : 
+https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
